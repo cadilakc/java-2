@@ -14,12 +14,21 @@ public class ServerApp {
             DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             System.out.println("Клиент подключен");
-
+            int counter = 0;
+            String status = "/stat";
             String message;
             while (true) {
                 message = in.readUTF();
+                if (message != null) {
+                    counter++;
+                }
+                if (message.equals(status)) {
+                    out.writeUTF("Количество сообщений - " + (counter - 1));
+                }
                 System.out.println(message);
-                out.writeUTF("ECHO " + message);
+                if (!message.equals(status)) {
+                    out.writeUTF("ECHO " + message);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
